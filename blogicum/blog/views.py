@@ -1,6 +1,5 @@
 from django.shortcuts import render
 from django.http import Http404
-# from django.shortcuts import get_list_or_404
 
 
 posts = [
@@ -49,43 +48,32 @@ posts = [
 posts_data = {post['id']: post for post in posts}
 
 
-# Create your views here.
 def index(request):
-
-    template = 'blog/index.html'
-    context = {
-        'title': 'Лента записей',
-        'content': 'Лента записей',
+    """Главная страница блога с отображением всех записей."""
+    return render(request, 'blog/index.html', {
         'posts': reversed(posts)
-    }
-
-    return render(request, template, context)
+    })
 
 
 def post_detail(request, id):
-
-    template = 'blog/detail.html'
+    """Страница с детальной информацией о конкретной записи."""
     post = posts_data.get(id)
 
     if post is None:
         raise Http404(f'Страницы {id} не существует')
 
-    context = {
-        'title': 'Остров отчаянья. 25 октября 1659 года',
-        'content': 'Остров отчаянья. 25 октября 1659 года',
+    return render(request, 'blog/detail.html', {
         'post': posts_data[id],
-
-    }
-
-    return render(request, template, context)
+    })
 
 
 def category_posts(request, category_slug):
+    """Страница с отображением записей определенной категории."""
+    category_posts_list = [
+        post for post in posts if post['category'] == category_slug
+    ]
 
-    template = 'blog/category.html'
-    context = {
-        'title': 'Публикации в категории personal',
-        'content': 'Публикации в категории personal',
-        'category': category_slug
-    }
-    return render(request, template, context)
+    return render(request, 'blog/category.html', {
+        'category': category_slug,
+        'posts': category_posts_list
+    })
