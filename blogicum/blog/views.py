@@ -1,7 +1,6 @@
 from django.shortcuts import render
 from django.http import Http404
 
-
 posts = [
     {
         'id': 0,
@@ -69,11 +68,6 @@ def post_detail(request, id):
 
 def category_posts(request, category_slug):
     """Страница с отображением записей определенной категории."""
-    category_posts_list = [
-        post for post in posts if post['category'] == category_slug
-    ]
-
     return render(request, 'blog/category.html', {
         'category': category_slug,
-        'posts': category_posts_list
     })
